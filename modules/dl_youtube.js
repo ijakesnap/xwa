@@ -26,7 +26,8 @@ class YouTubeModule {
                 permissions: 'public',
                 ui: {
                     processingText: '⏳ *Processing YouTube MP3 Download...*\n\n🔄 Working on your request...',
-                    errorText: '❌ *YouTube MP3 Download Failed*'
+                    errorText: '❌ *YouTube MP3 Download Failed*',
+                    isMediaCommand: true
                 },
                 execute: this.downloadMP3.bind(this)
             },
@@ -38,7 +39,8 @@ class YouTubeModule {
                 permissions: 'public',
                 ui: {
                     processingText: '⏳ *Processing YouTube MP4 Download...*\n\n🔄 Working on your request...',
-                    errorText: '❌ *YouTube MP4 Download Failed*'
+                    errorText: '❌ *YouTube MP4 Download Failed*',
+                    isMediaCommand: true
                 },
                 execute: this.downloadMP4.bind(this)
             }

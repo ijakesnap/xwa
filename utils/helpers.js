@@ -3,7 +3,8 @@ class Helpers {
     const {
       actionFn = () => { throw new Error('No action provided'); },
       processingText = '⏳ Processing...',
-      errorText = '❌ Something went wrong.'
+      errorText = '❌ Something went wrong.',
+      isMediaCommand = false // New option for media commands
     } = options;
 
     if (!bot?.sock?.sendMessage || !originalMsg?.key?.remoteJid) return;
@@ -12,26 +13,52 @@ class Helpers {
     const isMe = originalMsg.key.fromMe === true;
     let procKey = originalMsg.key;
 
-    // Edit own message or send temporary processing message
-    if (isMe) {
-      await bot.sock.sendMessage(jid, {
-        text: processingText,
-        edit: originalMsg.key
-      });
+    let processingMessage = null;
+    
+    // For media commands, always send a separate processing message
+    if (isMediaCommand) {
+      processingMessage = await bot.sock.sendMessage(jid, { text: processingText });
+      procKey = processingMessage.key;
     } else {
-      const m = await bot.sock.sendMessage(jid, { text: processingText });
-      procKey = m.key;
+      // Edit own message or send temporary processing message for text commands
+      if (isMe) {
+        await bot.sock.sendMessage(jid, {
+          text: processingText,
+          edit: originalMsg.key
+        });
+      } else {
+        const m = await bot.sock.sendMessage(jid, { text: processingText });
+        procKey = m.key;
+      }
     }
 
     try {
       const result = await actionFn();
 
-      await bot.sock.sendMessage(jid, {
-        text: typeof result === 'string'
-          ? result
-          : JSON.stringify(result, null, 2),
-        edit: procKey
-      });
+      // Handle media command results differently
+      if (isMediaCommand) {
+        // For media commands, delete the processing message instead of editing
+        if (processingMessage) {
+          try {
+            await bot.sock.sendMessage(jid, { delete: procKey });
+          } catch (deleteError) {
+            // If delete fails, edit with success message
+            await bot.sock.sendMessage(jid, {
+              text: '✅ Media sent successfully',
+              edit: procKey
+            });
+          }
+        }
+        // Don't send additional text response for media commands
+      } else {
+        // For text commands, edit the processing message with result
+        await bot.sock.sendMessage(jid, {
+          text: typeof result === 'string'
+            ? result
+            : JSON.stringify(result, null, 2),
+          edit: procKey
+        });
+      }
 
       return result;
 

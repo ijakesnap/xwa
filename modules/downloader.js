@@ -26,7 +26,8 @@ class DownloaderModule {
                 permissions: 'public',
                 ui: {
                     processingText: '⏳ *Processing TikTok Download...*\n\n🔄 Working on your request...',
-                    errorText: '❌ *TikTok Download Failed*'
+                    errorText: '❌ *TikTok Download Failed*',
+                    isMediaCommand: true
                 },
                 execute: this.downloadTikTok.bind(this)
             },
@@ -37,7 +38,8 @@ class DownloaderModule {
                 permissions: 'public',
                 ui: {
                     processingText: '⏳ *Processing Instagram Download...*\n\n🔄 Working on your request...',
-                    errorText: '❌ *Instagram Download Failed*'
+                    errorText: '❌ *Instagram Download Failed*',
+                    isMediaCommand: true
                 },
                 execute: this.downloadInstagram.bind(this)
             },
@@ -48,7 +50,8 @@ class DownloaderModule {
                 permissions: 'public',
                 ui: {
                     processingText: '⏳ *Processing SoundCloud Download...*\n\n🔄 Working on your request...',
-                    errorText: '❌ *SoundCloud Download Failed*'
+                    errorText: '❌ *SoundCloud Download Failed*',
+                    isMediaCommand: true
                 },
                 execute: this.downloadSoundCloud.bind(this)
             },
@@ -59,7 +62,8 @@ class DownloaderModule {
                 permissions: 'public',
                 ui: {
                     processingText: '⏳ *Processing Twitter Download...*\n\n🔄 Working on your request...',
-                    errorText: '❌ *Twitter Download Failed*'
+                    errorText: '❌ *Twitter Download Failed*',
+                    isMediaCommand: true
                 },
                 execute: this.downloadTwitter.bind(this)
             },
@@ -71,7 +75,8 @@ class DownloaderModule {
                 permissions: 'public',
                 ui: {
                     processingText: '⏳ *Processing Facebook Download...*\n\n🔄 Working on your request...',
-                    errorText: '❌ *Facebook Download Failed*'
+                    errorText: '❌ *Facebook Download Failed*',
+                    isMediaCommand: true
                 },
                 execute: this.downloadFacebook.bind(this)
             }

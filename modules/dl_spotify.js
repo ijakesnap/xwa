@@ -27,7 +27,8 @@ class SpotifyModule {
                 permissions: 'public',
                 ui: {
                     processingText: '⏳ *Processing Spotify Download...*\n\n🔄 Working on your request...',
-                    errorText: '❌ *Spotify Download Failed*'
+                    errorText: '❌ *Spotify Download Failed*',
+                    isMediaCommand: true
                 },
                 execute: this.downloadTrack.bind(this)
             }
