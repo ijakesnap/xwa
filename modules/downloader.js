@@ -25,7 +25,6 @@ class DownloaderModule {
                 usage: '.tiktok <url>',
                 permissions: 'public',
                 ui: {
-                    processingText: '⏳ *Processing TikTok Download...*\n\n🔄 Working on your request...',
                     errorText: '❌ *TikTok Download Failed*',
                     isMediaCommand: true
                 },
@@ -37,7 +36,6 @@ class DownloaderModule {
                 usage: '.instagram <url>',
                 permissions: 'public',
                 ui: {
-                    processingText: '⏳ *Processing Instagram Download...*\n\n🔄 Working on your request...',
                     errorText: '❌ *Instagram Download Failed*',
                     isMediaCommand: true
                 },
@@ -49,7 +47,6 @@ class DownloaderModule {
                 usage: '.soundcloud <url>',
                 permissions: 'public',
                 ui: {
-                    processingText: '⏳ *Processing SoundCloud Download...*\n\n🔄 Working on your request...',
                     errorText: '❌ *SoundCloud Download Failed*',
                     isMediaCommand: true
                 },
@@ -61,7 +58,6 @@ class DownloaderModule {
                 usage: '.twitter <url>',
                 permissions: 'public',
                 ui: {
-                    processingText: '⏳ *Processing Twitter Download...*\n\n🔄 Working on your request...',
                     errorText: '❌ *Twitter Download Failed*',
                     isMediaCommand: true
                 },
@@ -74,7 +70,6 @@ class DownloaderModule {
                 usage: '.facebook <url>',
                 permissions: 'public',
                 ui: {
-                    processingText: '⏳ *Processing Facebook Download...*\n\n🔄 Working on your request...',
                     errorText: '❌ *Facebook Download Failed*',
                     isMediaCommand: true
                 },

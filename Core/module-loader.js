@@ -423,19 +423,31 @@ await context.bot.sendMessage(context.sender, { text: helpText.trim() });
 
                     const ui = cmd.ui || {};
 
-                    // Only wrap commands that have UI config (structured modules)
+                    // Determine command type and wrapping strategy
+                    const isMediaCommand = ui.isMediaCommand === true;
                     const shouldWrap = cmd.ui && (cmd.autoWrap !== false);
+                    
                     const wrappedCmd = shouldWrap ? {
                         ...cmd,
                         execute: async (msg, params, context) => {
-                            await helpers.smartErrorRespond(context.bot, msg, {
-                                processingText: ui.processingText || `⏳ Running *${cmd.name}*...`,
-                                errorText: ui.errorText || `❌ *${cmd.name}* failed.`,
-                                isMediaCommand: ui.isMediaCommand || false,
-                                actionFn: async () => {
-                                    return await cmd.execute(msg, params, context);
-                                }
-                            });
+                            if (isMediaCommand) {
+                                // Media commands: No processing UI, direct execution with error handling
+                                await helpers.smartMediaRespond(context.bot, msg, {
+                                    errorText: ui.errorText || `❌ *${cmd.name}* failed.`,
+                                    actionFn: async () => {
+                                        return await cmd.execute(msg, params, context);
+                                    }
+                                });
+                            } else {
+                                // Text commands: Full processing UI with edit
+                                await helpers.smartTextRespond(context.bot, msg, {
+                                    processingText: ui.processingText || `⏳ Running *${cmd.name}*...`,
+                                    errorText: ui.errorText || `❌ *${cmd.name}* failed.`,
+                                    actionFn: async () => {
+                                        return await cmd.execute(msg, params, context);
+                                    }
+                                });
+                            }
                         }
                     } : cmd; // Use original command without wrapping
 

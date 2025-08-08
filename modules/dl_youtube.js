@@ -25,7 +25,6 @@ class YouTubeModule {
                 aliases: ['ytmp3'],
                 permissions: 'public',
                 ui: {
-                    processingText: '⏳ *Processing YouTube MP3 Download...*\n\n🔄 Working on your request...',
                     errorText: '❌ *YouTube MP3 Download Failed*',
                     isMediaCommand: true
                 },
@@ -38,7 +37,6 @@ class YouTubeModule {
                 aliases: ['yt'],
                 permissions: 'public',
                 ui: {
-                    processingText: '⏳ *Processing YouTube MP4 Download...*\n\n🔄 Working on your request...',
                     errorText: '❌ *YouTube MP4 Download Failed*',
                     isMediaCommand: true
                 },

@@ -20,8 +20,8 @@ class FileInfoModule {
                 usage: '.fileinfo (reply to file/media)',
                 permissions: 'public',
                 ui: {
-                    processingText: '📁 *Analyzing File...*\n\n⏳ Getting file information...',
                     errorText: '❌ *File Analysis Failed*'
+                    isMediaCommand: true
                 },
                 execute: this.getFileInfo.bind(this)
             },
@@ -31,8 +31,8 @@ class FileInfoModule {
                 usage: '.mediainfo (reply to media)',
                 permissions: 'public',
                 ui: {
-                    processingText: '🎬 *Analyzing Media...*\n\n⏳ Extracting media details...',
                     errorText: '❌ *Media Analysis Failed*'
+                    isMediaCommand: true
                 },
                 execute: this.getMediaInfo.bind(this)
             },
@@ -42,8 +42,8 @@ class FileInfoModule {
                 usage: '.hash (reply to file)',
                 permissions: 'public',
                 ui: {
-                    processingText: '🔐 *Calculating Hash...*\n\n⏳ Computing file checksums...',
                     errorText: '❌ *Hash Calculation Failed*'
+                    isMediaCommand: true
                 },
                 execute: this.getFileHash.bind(this)
             }

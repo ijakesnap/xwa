@@ -1,64 +1,38 @@
 class Helpers {
-  static async smartErrorRespond(bot, originalMsg, options = {}) {
+  static async smartTextRespond(bot, originalMsg, options = {}) {
     const {
       actionFn = () => { throw new Error('No action provided'); },
       processingText = '⏳ Processing...',
-      errorText = '❌ Something went wrong.',
-      isMediaCommand = false // New option for media commands
+      errorText = '❌ Something went wrong.'
     } = options;
 
     if (!bot?.sock?.sendMessage || !originalMsg?.key?.remoteJid) return;
 
     const jid = originalMsg.key.remoteJid;
     const isMe = originalMsg.key.fromMe === true;
-    let procKey = originalMsg.key;
 
-    let processingMessage = null;
-    
-    // For media commands, always send a separate processing message
-    if (isMediaCommand) {
-      processingMessage = await bot.sock.sendMessage(jid, { text: processingText });
-      procKey = processingMessage.key;
+    // Edit own message or send temporary processing message for text commands
+    let procKey = originalMsg.key;
+    if (isMe) {
+      await bot.sock.sendMessage(jid, {
+        text: processingText,
+        edit: originalMsg.key
+      });
     } else {
-      // Edit own message or send temporary processing message for text commands
-      if (isMe) {
-        await bot.sock.sendMessage(jid, {
-          text: processingText,
-          edit: originalMsg.key
-        });
-      } else {
-        const m = await bot.sock.sendMessage(jid, { text: processingText });
-        procKey = m.key;
-      }
+      const m = await bot.sock.sendMessage(jid, { text: processingText });
+      procKey = m.key;
     }
 
     try {
       const result = await actionFn();
 
-      // Handle media command results differently
-      if (isMediaCommand) {
-        // For media commands, delete the processing message instead of editing
-        if (processingMessage) {
-          try {
-            await bot.sock.sendMessage(jid, { delete: procKey });
-          } catch (deleteError) {
-            // If delete fails, edit with success message
-            await bot.sock.sendMessage(jid, {
-              text: '✅ Media sent successfully',
-              edit: procKey
-            });
-          }
-        }
-        // Don't send additional text response for media commands
-      } else {
-        // For text commands, edit the processing message with result
-        await bot.sock.sendMessage(jid, {
-          text: typeof result === 'string'
-            ? result
-            : JSON.stringify(result, null, 2),
-          edit: procKey
-        });
-      }
+      // For text commands, edit the processing message with result
+      await bot.sock.sendMessage(jid, {
+        text: typeof result === 'string'
+          ? result
+          : JSON.stringify(result, null, 2),
+        edit: procKey
+      });
 
       return result;
 
@@ -71,12 +45,45 @@ class Helpers {
       error._handledBySmartError = true;
       throw error;
     }
+  }
 
+  static async smartMediaRespond(bot, originalMsg, options = {}) {
+    const {
+      actionFn = () => { throw new Error('No action provided'); },
+      errorText = '❌ Media processing failed.'
+    } = options;
 
+    if (!bot?.sock?.sendMessage || !originalMsg?.key?.remoteJid) return;
+
+    const jid = originalMsg.key.remoteJid;
+
+    try {
+      // Execute directly without processing UI
+      const result = await actionFn();
+      return result;
+
+    } catch (error) {
+      // Only send error message for media commands
+      await bot.sock.sendMessage(jid, {
+        text: `${errorText}${error.message ? `\n\n🔍 ${error.message}` : ''}`
+      });
+
+      error._handledBySmartError = true;
+      throw error;
+    }
+  }
+
+  static async smartErrorRespond(bot, originalMsg, options = {}) {
+    // Legacy support - redirect to appropriate handler
+    if (options.isMediaCommand) {
+      return this.smartMediaRespond(bot, originalMsg, options);
+    } else {
+      return this.smartTextRespond(bot, originalMsg, options);
+    }
   }
 
   static async sendCommandResponse(bot, originalMsg, responseText) {
-    await this.smartErrorRespond(bot, originalMsg, {
+    await this.smartTextRespond(bot, originalMsg, {
       processingText: '⏳ Checking command...',
       errorText: responseText,
       actionFn: async () => {

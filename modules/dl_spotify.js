@@ -26,7 +26,6 @@ class SpotifyModule {
                 aliases: ['sp', 'spotdl'],
                 permissions: 'public',
                 ui: {
-                    processingText: '⏳ *Processing Spotify Download...*\n\n🔄 Working on your request...',
                     errorText: '❌ *Spotify Download Failed*',
                     isMediaCommand: true
                 },
